@@ -6,9 +6,10 @@ public class RocketMovement : MonoBehaviour
 {
     float xValue;
     float yValue;
-    [SerializeField]int upForce = 10;
+    [SerializeField] float mainThrust = 100.0f;
+    [SerializeField] float rotationThrust = 4.0f;
     Rigidbody rigidbody;
-    // Start is called before the first frame update
+
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -20,20 +21,32 @@ public class RocketMovement : MonoBehaviour
         ProcessRotation();
     }
 
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.tag == "Landing Pad") {
+            Debug.Log("Landed");
+        }
+    }
+
     void ProcessThrust()
     {
         if(Input.GetKey(KeyCode.Space)){
-            rigidbody.AddRelativeForce(Vector3.up * upForce);
+            rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+            Debug.Log("Thrusting");
         };
     }
 
     void ProcessRotation(){
         if(Input.GetKey(KeyCode.A)){
-            transform.Rotate(Vector3.forward * upForce * 0.5f);
+            ApplyRotation(rotationThrust);
         }
-        else if(Input.GetKey(KeyCode.D)){
-            transform.Rotate(Vector3.back * upForce*0.5f);
+       else if(Input.GetKey(KeyCode.D)){
+            ApplyRotation(-rotationThrust);
         };
+    }
 
+    void ApplyRotation(float rotationThisFrame ){
+        rigidbody.freezeRotation = true; // take manual control of rotation
+        transform.Rotate( Vector3.forward * rotationThisFrame * Time.deltaTime);
+        rigidbody.freezeRotation = false;
     }
 }
