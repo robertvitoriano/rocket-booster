@@ -49,29 +49,27 @@ public class CollisionHandler : MonoBehaviour
                 break;
             default:
             HandleCollision();
+            checkDeath();
             break;
         }
     }
 
     async void OnCollisionExit(Collision other) {
+        if(lives >= 1) {
         meshRenderer.material.color = originalColor;
         await Task.Delay(collisionTime);
         isColliding = false;
-
+        }
     }
 
     void HandleCollision(){
-        if(lives > 0){
+        if(lives >= 1){
         isColliding = true;
         meshRenderer.material.color = Color.red;
         audioSource.PlayOneShot(collisionSound, 0.7f);
         lives--;
         livesText.text = "Lives: " + lives;
-    }else{
-          if(!hasExploded){
-            HandleDeath();
-          }
-        }
+    }
     }
 
     async void HandleDeath() {
@@ -81,5 +79,11 @@ public class CollisionHandler : MonoBehaviour
         audioSource.PlayOneShot(explosionSound, 0.7f);
         await Task.Delay(dyingTime);
         deathScreen.SetActive(true);
+    }
+
+    void checkDeath() {
+        if(lives <= 0) {
+            HandleDeath();
+        }
     }
 }
