@@ -23,17 +23,10 @@ public class RocketMovement : MonoBehaviour
         ProcessRotation();
     }
 
-    private void OnCollisionEnter(Collision other) {
-        if(other.gameObject.tag == "Landing Pad") {
-            Debug.Log("Landed");
-        }
-    }
-
     void ProcessThrust()
     {
         if(Input.GetKey(KeyCode.Space)){
             rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-            Debug.Log("Thrusting");
             if(!audioSource.isPlaying) {
                 audioSource.Play();
             }
