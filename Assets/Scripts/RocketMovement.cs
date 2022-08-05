@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
@@ -10,15 +12,22 @@ public class RocketMovement : MonoBehaviour
     [SerializeField] float rotationThrust = 4.0f;
     Rigidbody rigidbody;
     AudioSource audioSource;
+    [SerializeField] AudioClip mainEngine;
+    CollisionHandler collisionHandler;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        collisionHandler = GetComponent<CollisionHandler>();
     }
 
     void Update()
     {
+        if(collisionHandler.lives <= 0)
+        {
+            return;
+        }
         ProcessThrust();
         ProcessRotation();
     }
@@ -27,10 +36,13 @@ public class RocketMovement : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.Space)){
             rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-            if(!audioSource.isPlaying) {
-                audioSource.Play();
+            if(!audioSource.isPlaying){
+                audioSource.PlayOneShot(mainEngine, 0.7f);
             }
-        }else{
+        }else {
+            if(collisionHandler.isColliding){
+                return;
+            }
             audioSource.Stop();
         }
     }
