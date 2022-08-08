@@ -29,6 +29,7 @@ public class RocketMovement : MonoBehaviour
             rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             if(!audioSource.isPlaying) {
                 audioSource.Play();
+                print("Playing");
             }
         }else{
             audioSource.Stop();
