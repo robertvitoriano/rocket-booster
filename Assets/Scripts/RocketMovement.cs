@@ -10,6 +10,8 @@ public class RocketMovement : MonoBehaviour
     [SerializeField] float rotationThrust = 4.0f;
     Rigidbody rigidbody;
     AudioSource audioSource;
+    [SerializeField] AudioClip mainEngine;
+
 
     void Start()
     {
@@ -27,9 +29,8 @@ public class RocketMovement : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.Space)){
             rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-            if(!audioSource.isPlaying) {
-                audioSource.Play();
-                print("Playing");
+            if(!audioSource.isPlaying){
+                audioSource.PlayOneShot(mainEngine);
             }
         }else{
             audioSource.Stop();

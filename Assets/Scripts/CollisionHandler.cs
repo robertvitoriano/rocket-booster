@@ -2,15 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class CollisionHandler : MonoBehaviour
 {
-    RocketMovement rocketMovement;
+    public float levelLoadDelay = 3f;
 
-    public float levelLoadDelay = 1f;
+    [SerializeField] AudioClip success;
+    [SerializeField] AudioClip death;
+    [SerializeField] AudioClip collision;
+
+    RocketMovement rocketMovement;
+    AudioSource audioSource;
+
+    bool isTransitioning = false;
+
     void Start()
     {
         rocketMovement = GetComponent<RocketMovement>();
+        audioSource = GetComponent<AudioSource>();
+
     }
     void OnCollisionEnter(Collision other) {
         switch(other.gameObject.tag) {
@@ -23,6 +34,9 @@ public class CollisionHandler : MonoBehaviour
             case "Fuel":
                 print("Fuel");
                 break;
+            case "Friendly":
+                print("Friendly");
+                break;
             default:
                 StartCrashSequence();
                 break;
@@ -30,24 +44,33 @@ public class CollisionHandler : MonoBehaviour
     } 
 
     void StartCrashSequence(){
-        rocketMovement.enabled = false;
-        Invoke("ReloadLevel",levelLoadDelay);
+        if(!isTransitioning){
+            isTransitioning = true;
+            audioSource.PlayOneShot(collision);
+            rocketMovement.enabled = false;
+            Invoke("ReloadLevel", levelLoadDelay);
+        }
     }
 
     void StartSuccessSequence(){
-        rocketMovement.enabled = false;
-        Invoke("LoadNextLevel",levelLoadDelay);
+        if(!isTransitioning){
+            isTransitioning = true;
+            audioSource.PlayOneShot(success);
+            rocketMovement.enabled = false;
+            Invoke("LoadNextLevel", levelLoadDelay);
+        }
+
     }
 
 
 
     void ReloadLevel(){
-        rocketMovement.enabled = true;
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        rocketMovement.enabled = true;
         SceneManager.LoadScene(currentSceneIndex);
     }
 
-    void LoadNexLevel(){
+    void LoadNextLevel(){
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
 
@@ -55,8 +78,7 @@ public class CollisionHandler : MonoBehaviour
            nextSceneIndex = 0;
         }
 
+        rocketMovement.enabled = true;
         SceneManager.LoadScene(nextSceneIndex);
-        Invoke("ReloadLevel", levelLoadDelay);
-
     }
 }
