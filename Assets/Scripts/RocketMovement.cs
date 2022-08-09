@@ -50,8 +50,10 @@ public class RocketMovement : MonoBehaviour
     }
 
     void ApplyRotation(float rotationThisFrame ){
-        rigidbody.freezeRotation = true; // take manual control of rotation
+        rigidbody.freezeRotation = true; 
         transform.Rotate( Vector3.forward * rotationThisFrame * Time.deltaTime);
         rigidbody.freezeRotation = false;
     }
+
+
 }

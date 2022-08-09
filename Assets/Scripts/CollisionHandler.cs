@@ -19,6 +19,7 @@ public class CollisionHandler : MonoBehaviour
     MeshRenderer meshRenderer;
 
     bool isTransitioning = false;
+    bool collisionDisabled = false;
 
     void Start()
     {
@@ -27,7 +28,16 @@ public class CollisionHandler : MonoBehaviour
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
 
     }
+
+    void Update(){
+        RespondToDebugKeys();
+    }
+
     void OnCollisionEnter(Collision other) {
+
+        if(isTransitioning || collisionDisabled){
+            return;
+        }
         switch(other.gameObject.tag) {
             case "Landing Pad":
                 StartSuccessSequence();
@@ -48,7 +58,6 @@ public class CollisionHandler : MonoBehaviour
     } 
 
     void StartCrashSequence(){
-        if(!isTransitioning){
             isTransitioning = true;
             audioSource.Stop();
             deathParticles.Play();
@@ -57,11 +66,9 @@ public class CollisionHandler : MonoBehaviour
             meshRenderer.enabled = false;
             rocketMovement.thrustParticles.Stop();
             Invoke("ReloadLevel", levelLoadDelay);
-        }
     }
 
     void StartSuccessSequence(){
-        if(!isTransitioning){
             isTransitioning = true;
             audioSource.Stop();
             successParticles.Play();
@@ -70,8 +77,6 @@ public class CollisionHandler : MonoBehaviour
             meshRenderer.enabled = false;
             rocketMovement.thrustParticles.Stop();
             Invoke("LoadNextLevel", levelLoadDelay);
-        }
-
     }
 
 
@@ -92,5 +97,16 @@ public class CollisionHandler : MonoBehaviour
 
         rocketMovement.enabled = true;
         SceneManager.LoadScene(nextSceneIndex);
+    }
+
+    void RespondToDebugKeys(){
+        if(Input.GetKeyDown(KeyCode.L)){
+            LoadNextLevel();
+        }
+        else if(Input.GetKeyDown(KeyCode.C)){
+            collisionDisabled = !collisionDisabled;
+        }
+        else if(Input.GetKeyDown(KeyCode.R)){
+        }
     }
 }
