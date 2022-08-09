@@ -11,9 +11,12 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] AudioClip success;
     [SerializeField] AudioClip death;
     [SerializeField] AudioClip collision;
+    [SerializeField] ParticleSystem successParticles;
+    [SerializeField] ParticleSystem deathParticles;
 
     RocketMovement rocketMovement;
     AudioSource audioSource;
+    MeshRenderer meshRenderer;
 
     bool isTransitioning = false;
 
@@ -21,6 +24,7 @@ public class CollisionHandler : MonoBehaviour
     {
         rocketMovement = GetComponent<RocketMovement>();
         audioSource = GetComponent<AudioSource>();
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
 
     }
     void OnCollisionEnter(Collision other) {
@@ -46,8 +50,12 @@ public class CollisionHandler : MonoBehaviour
     void StartCrashSequence(){
         if(!isTransitioning){
             isTransitioning = true;
+            audioSource.Stop();
+            deathParticles.Play();
             audioSource.PlayOneShot(collision);
             rocketMovement.enabled = false;
+            meshRenderer.enabled = false;
+            rocketMovement.thrustParticles.Stop();
             Invoke("ReloadLevel", levelLoadDelay);
         }
     }
@@ -55,8 +63,12 @@ public class CollisionHandler : MonoBehaviour
     void StartSuccessSequence(){
         if(!isTransitioning){
             isTransitioning = true;
+            audioSource.Stop();
+            successParticles.Play();
             audioSource.PlayOneShot(success);
             rocketMovement.enabled = false;
+            meshRenderer.enabled = false;
+            rocketMovement.thrustParticles.Stop();
             Invoke("LoadNextLevel", levelLoadDelay);
         }
 

@@ -11,6 +11,7 @@ public class RocketMovement : MonoBehaviour
     Rigidbody rigidbody;
     AudioSource audioSource;
     [SerializeField] AudioClip mainEngine;
+    public ParticleSystem thrustParticles;
 
 
     void Start()
@@ -31,9 +32,11 @@ public class RocketMovement : MonoBehaviour
             rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             if(!audioSource.isPlaying){
                 audioSource.PlayOneShot(mainEngine);
+                thrustParticles.Play();
             }
         }else{
             audioSource.Stop();
+            thrustParticles.Stop();
         }
     }
 
