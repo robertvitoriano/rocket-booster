@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 8586859151756409094}
   - component: {fileID: 6317292525556355177}
   - component: {fileID: 6317292525556355178}
+  - component: {fileID: 6584403723562613611}
   m_Layer: 0
   m_Name: Real Rocket 1
   m_TagString: Untagged
@@ -348,6 +349,18 @@ MonoBehaviour:
   collision: {fileID: 8300000, guid: ab97c5ef134d8f7ac8093f283cea916b, type: 3}
   successParticles: {fileID: 8522642331204607248}
   deathParticles: {fileID: 250503664235596495}
+--- !u!114 &6584403723562613611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7655102084355592454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3fb6b28688eb75749cf0b9cf9cfebfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8829555161621573216
 GameObject:
   m_ObjectHideFlags: 0
